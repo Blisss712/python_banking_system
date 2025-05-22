@@ -14,7 +14,9 @@ class Colors:
         self.green = "\033[32m"
         self.reset = "\033[0m"
         self.bold = "\033[1m"
-
+        self.underline = "\033[4m"
+        self.faded = "\033[2m"
+        self.blue = "\033[34m"
 class Options:
     def __init__(self):
         self.yes = ["YES","Yes","yes", "yEs", "YeS", "yeS","y","Y"]
@@ -22,65 +24,211 @@ class Options:
         
 
 def is_float(s):
-  """
-  Checks if a string can be successfully converted to a float.
+    """
+    Checks if a string can be successfully converted to a float.
 
-  Args:
+    Args:
     s: The string to check.
 
-  Returns:
+    Returns:
     bool: True if the string can be converted to a float, False otherwise.
-  """
-  try:
-    float(s)
-    return True
-  except ValueError:
-    return False
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
 
+def deposit(user_id):
+    file_name = "gab's_banking_system_users.csv"
+    
+    while True:
+        color = Colors()
+        RED, GREEN, RESET, UNDERLINE = color.red, color.green, color.reset, color.underline
+        
+        new_database_rows = []
+        complete_transaction = False
+        deposit_amount = input("\nInput the amount you want to deposit: ").strip().replace(',','')
+        if deposit_amount == "cancel" or deposit_amount == "Cancel":
+            print(f"{RED}\nTransaction Cancelled.{RESET}")
+            break
+        
+        if is_float(deposit_amount) and '.' in deposit_amount:
+            deposit_peso, deposit_cent = deposit_amount.split(".")
+            if len(deposit_cent) > 2:
+                print(f"{RED}Please deposit a valid amount no lesser than one centavo.{RESET}") 
+                continue
+                
+        elif not deposit_amount.isdigit():
+            print(f"{RED}Invalid amount: Please return a valid digit/value{RESET}")
+            continue
+
+        with open(file_name, "r", newline="") as file:
+            reader = csv.DictReader(file)
+            for line in reader:
+                if line["user_ids"] == user_id:
+                    current_value = line["user_balance"]
+                    current_value, deposit_amount = float(current_value), float(deposit_amount)
+
+                    user_balance_left = current_value + deposit_amount
+                    print(f"{GREEN}You have successfully depositted: {UNDERLINE}P{deposit_amount:.2f}{RESET}")
+                    complete_transaction = True
+                    break
+                
+                else:
+                    raise CsvError(f"An Unexpected error occured to withdrawing in the account id {user_id}")
+                
+        if complete_transaction:
+            with open(file_name, "r", newline="") as file:
+                reader = csv.DictReader(file)
+                fieldnames = reader.fieldnames
+                
+                for row in reader:
+                    if row["user_ids"] == user_id:
+                        row["user_balance"] = user_balance_left
+                    new_database_rows.append(row)
+                    
+            with open(file_name, "w", newline="") as file:
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(new_database_rows)
+                
+            break
+                
 def withdraw(user_id):
     file_name = "gab's_banking_system_users.csv"
-    withdrawed_amount = input("How much do you want? ")
     
-    if is_float(withdrawed_amount) and '.' in withdrawed_amount: 
-        withdrawed_peso, withdrawed_cent = withdrawed_amount.split(".")
-        if len(withdrawed_cent) > 0:
-            print("Please withdraw a valid amount no lesser than one centavo.") 
-    elif '.' not in withdrawed_amount:
-        withdrawed_peso = withdrawed_amount
-    else:
-        print("Invalid amount: please try again.")
-    with open(file_name, "r", newline="") as file:
+    while True:
+        color = Colors()
+        RED, GREEN, RESET, UNDERLINE = color.red, color.green, color.reset, color.underline
         
-        reader = csv.DictReader(file)
-        for line in reader:
+        new_database_rows = []
+        complete_transaction = False
+        withdrawed_amount = input("\nInput the amount you want to withdraw: ").strip().replace(',','')
+        
+        if withdrawed_amount == "cancel" or withdrawed_amount == "Cancel":
+            print(f"{RED}\nTransaction Cancelled.{RESET}")
+            break
+        if is_float(withdrawed_amount) and '.' in withdrawed_amount: 
+            withdrawed_peso, withdrawed_cent = withdrawed_amount.split(".")
+            if len(withdrawed_cent) > 2:
+                print(f"{RED}Please withdraw a valid amount no lesser than one centavo.{RESET}") 
+                continue
+                
+        elif not withdrawed_amount.isdigit():
+            print(f"{RED}Invalid amount: Please return a valid digit{RESET}")
+            continue
+
+        with open(file_name, "r", newline="") as file:
+            reader = csv.DictReader(file)
+            for line in reader:
                 if line["user_ids"] == user_id:
-                    current_value = line["user_ids"]
+                    current_value = line["user_balance"]
+                    current_value, withdrawed_amount = float(current_value), float(withdrawed_amount)
+                    if current_value < withdrawed_amount:
+                        print(f"{RED}Please withdraw within the range of your balance.{RESET}")
+                        print(f"Note: your current balance is: {UNDERLINE}{current_value}{RESET}\n")
+                        break
+                    else:
+                        user_balance_left = current_value - withdrawed_amount
+  
+                        print(f"{GREEN}You have successfully withdrawed: {UNDERLINE}P{withdrawed_amount:.2f}{RESET}")
+                        complete_transaction = True
+                        break
+                else:
+                    raise CsvError(f"An Unexpected error occured to withdrawing in the account id {user_id}")
+            
+
+
+        if complete_transaction:
+            with open(file_name, "r", newline="") as file:
+                reader = csv.DictReader(file)
+                fieldnames = reader.fieldnames
+                
+                for row in reader:
+                    if row["user_ids"] == user_id:
+                        row["user_balance"] = user_balance_left
+                    new_database_rows.append(row)
                     
+            with open(file_name, "w", newline="") as file:
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(new_database_rows)
+                
+            break
+                        
 
 
-def display_balance():
-    pass
+def display_balance(user_id):
+    color = Colors()
+    UNDERLINE, RESET = color.underline, color.reset
+    file_name = "gab's_banking_system_users.csv"
+    with open(file_name, "r", newline="") as file:
+        reader = csv.DictReader(file)
+        user_exists = False
+        
+        for row in reader:
+            if row["user_ids"] == user_id:
+                current_balance = row["user_balance"]
+                
+                if is_float(current_balance) and ('.' in current_balance):
+                    balance_list = current_balance.split(".")
+                    peso, centavo = balance_list
 
-def deposit():
-    pass
+                    if peso.isdigit() and centavo.isdigit():
+                        print(f"\n{row["usernames"]}'s balance: ")
+                        print(f"{UNDERLINE}P{int(peso):,}.{centavo}{RESET}")
+                        user_exists = True
+                        break
+                    elif len(balance_list) > 3:
+                        raise CsvError("Error in displaying balance: invalid centavo values") 
+                    else:
+                        raise CsvError("Error in displaying balance: invalid peso and centavo values")
+                    
+                elif row["user_balance"].isdigit():
+                    print(f"\n{row["usernames"]}'s balance: ")
+                    print(f"{UNDERLINE}P{int(current_balance):,.2f}{RESET}")
+                    user_exists = True
+                    break
 
-def display_user_information():
-    pass
+        if not user_exists:
+            raise CsvError("Error in displaying balance: invalid centavo values")
+
+
+
+def display_user_information(user_id):
+    color = Colors()
+    BLUE, RESET = color.blue, color.reset
+    file_name = "gab's_banking_system_users.csv"
+    with open(file_name, "r", newline="") as file:
+        reader = csv.DictReader(file)
+        
+        try:
+            for row in reader:
+                if row["user_ids"] == user_id:
+                    full_name = row["usernames"]
+                    print(f"\nFull name: {BLUE}{full_name.capitalize()}{RESET}")
+                    print(f"Id number: {BLUE}{user_id}{RESET}")
+        except Exception as e:
+            raise CsvError(e)
+
+
 
 def prompt_and_execute_user_choice(user_id):
     color = Colors()
     RED, BOLD, RESET = color.red, color.bold, color.reset
     while True:
-        user_choice = input("Enter your chosen option here: ")
-        if user_choice == 1:
+        display_user_navigation(user_id)
+        user_choice = input("\nEnter your chosen option here: ")
+        if user_choice == "1":
             withdraw(user_id)
-        elif user_choice == 2:
+        elif user_choice == "2":
             deposit(user_id)
-        elif user_choice == 3:
+        elif user_choice == "3":
             display_balance(user_id)
-        elif user_choice == 4:
+        elif user_choice == "4":
             display_user_information(user_id)
-        elif user_choice == 5:
+        elif user_choice == "5":
             return
         else:
             print(f"{RED}your input '{BOLD}{user_choice}{RESET}{RED}' is not in the navigation list, please enter a valid value{RESET}")
@@ -92,19 +240,24 @@ def display_user_navigation(user_id):
     RED, RESET = color.red, color.reset
     file_name = "gab's_banking_system_users.csv"
     try:
+        id_not_found = True
         with open(file_name, "r", newline="") as file:
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:
-                    print(f"Hello {line['usernames']}!")
+                    print(f"\nHello {line['usernames'].capitalize()}!")
                     print(f"Enter any number to navigate for your account.")
                     print("1. Withdraw")
                     print("2. Deposit")
                     print("3. Display balance")
                     print("4. Display User Information")
                     print("5. Log-out")
-                else:
-                    raise CsvError(f"{RED}Something went wrong the to user id.{RESET}")
+                    id_not_found = False
+            
+            
+            if id_not_found:
+                raise CsvError(f"{RED}Something went wrong the to user id.{RESET}")     
+        
     except FileNotFoundError as e:
         print("{RED}File Error in display_user_navigation:{RESET}")
         raise CsvError(e)
@@ -191,6 +344,9 @@ def create_new_account(file_name: str) -> False:
         print(f"\n{RED}An Unexpected Error Occured: {e}{RESET}")
 
 def check_database_content():
+    color = Colors()
+    BOLD, RESET, RED, UNDERLINE = color.bold, color.reset, color.red, color.underline
+    
     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
     number_of_columns = len(fieldnames)
     file_name = "gab's_banking_system_users.csv"
@@ -205,8 +361,10 @@ def check_database_content():
                 balance = line["user_balance"]
                 if len(line) != number_of_columns:
                     raise CsvError("Error in the user dataset, invalid number of user data parameters.")
+                elif is_float(balance) and '.' in balance:
+                    return
                 elif not balance.isdigit():
-                    raise CsvError("Error in the user dataset, invalid balance value.")
+                    raise CsvError(f"Error in the user dataset, invalid {UNDERLINE}{BOLD}balance{RESET}{RED} value.")
                                 
     
 def check_database_file():
@@ -299,13 +457,12 @@ def main():
         
             # goes back to user authentication if the string value is false -- (when continue is triggered by the else statement)
             if authenticated_id:
-                display_user_navigation(authenticated_id)
                 prompt_and_execute_user_choice(authenticated_id)
             else:
                 continue
     
-    except ValueError as e:
-        print(f"{BOLD}{RED}Error:{RESET}", e)
+    # except ValueError as e:
+    #     print(f"{BOLD}{RED}Error:{RESET}", e)
         
     except FileNotFoundError as e:
         print("Error:", e)
@@ -320,3 +477,4 @@ def main():
         
 if __name__ == "__main__":
     main()
+    # withdraw("1")
