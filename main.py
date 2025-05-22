@@ -17,6 +17,9 @@ class Colors:
         self.underline = "\033[4m"
         self.faded = "\033[2m"
         self.blue = "\033[34m"
+        self.yellow = "\033[33m"
+        self.bblue = "\033[94m" # bright blue color
+        
 class Options:
     def __init__(self):
         self.yes = ["YES","Yes","yes", "yEs", "YeS", "yeS","y","Y"]
@@ -237,7 +240,7 @@ def prompt_and_execute_user_choice(user_id):
         
 def display_user_navigation(user_id):
     color = Colors()
-    RED, RESET = color.red, color.reset
+    RED, YELLOW, BLUE, RESET = color.red, color.yellow, color.blue, color.reset
     file_name = "gab's_banking_system_users.csv"
     try:
         id_not_found = True
@@ -245,8 +248,8 @@ def display_user_navigation(user_id):
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:
-                    print(f"\nHello {line['usernames'].capitalize()}!")
-                    print(f"Enter any number to navigate for your account.")
+                    print(f"\n{YELLOW}Hello {line['usernames'].capitalize()}!{RESET}")
+                    print(f"{BLUE}Enter any number to navigate for your account.{RESET}")
                     print("1. Withdraw")
                     print("2. Deposit")
                     print("3. Display balance")
@@ -391,7 +394,7 @@ def check_database_file():
 def verify_user(file_name: str):
     
     color = Colors()
-    RED, BOLD, GREEN, RESET = color.red, color.bold, color.green, color.reset
+    RED, BOLD, GREEN, RESET = color.red, color.bold, color.green, color.reset, 
     user_id = input("Enter your user id: ").strip()
     with open(file_name, newline="") as file:
         reader = csv.DictReader(file)
@@ -404,11 +407,12 @@ def verify_user(file_name: str):
                         print(f"\n{GREEN}You have successfully signed in to your account!{RESET}")
                         return user_id
                     elif attempts >= 1:
-                        print(f"Invalid password, you have {attempts} {'attempt' if attempts == 1 else 'attempts'} left.")
+                        print(f"{RED}{BOLD}Invalid password:{RESET}{RED}  you have {attempts} {'attempt' if attempts == 1 else 'attempts'} left.{RESET}")
                         passcode = input("Enter your password: ")
                         attempts -= 1
                     else:
                         print(f"\n{BOLD}{RED}Login Failed{RESET}")
+                        print(f"{RED}(Please enter the correct password.){RESET}")
                         return False
      
         print(f"\n{RED}{BOLD}Cannot find the user with user_id: {user_id}{RESET}")
@@ -461,8 +465,8 @@ def main():
             else:
                 continue
     
-    # except ValueError as e:
-    #     print(f"{BOLD}{RED}Error:{RESET}", e)
+    except ValueError as e:
+        print(f"{BOLD}{RED}\nError:{RESET}{RED} Please enter a valid input and try again\n{RESET}")
         
     except FileNotFoundError as e:
         print("Error:", e)
