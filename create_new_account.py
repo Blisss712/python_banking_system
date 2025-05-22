@@ -1,3 +1,26 @@
+"""
+    The function is designed to always return 'False', which in the application
+    forces a log-in attempt after the account creation process, ensuring the user
+    can immediately access their newly created account.
+
+    Arguments:
+        file_name (str): The name of the CSV file where user account
+                         information will be stored.
+
+    Returns:
+        False: Always returns `False` to signal the calling process to
+               initiate a login attempt.
+
+    Raises:
+        ValueError: If the user provides non-digit input for the user ID,
+                    or invalid input for confirmation prompts (e.g., 'yes'/'no').
+        CsvError: If an error occurs during the CSV file operations (e.g., writing).
+        FileNotFoundError: If the specified CSV file does not exist when
+                           attempting to write to it.
+        Exception: For any other unexpected errors that may occur during the process.
+"""
+
+
 import csv
 import os
 
