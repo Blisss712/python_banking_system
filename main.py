@@ -2,7 +2,8 @@ import csv
 import os
 
 
-
+class CsvError(Exception):
+    pass
 
 class FileError(Exception):
     pass
@@ -17,7 +18,7 @@ class Colors:
 class Options:
     def __init__(self):
         self.yes = ["YES","Yes","yes", "yEs", "YeS", "yeS","y","Y"]
-        self.no = ["No","nO","NO","N","n"]
+        self.no = ["No","nO","NO","no","N","n"]
 
 def withdraw():
     pass
@@ -30,8 +31,11 @@ def display_user_navigation():
 
 def create_account(file_name):
     try:
+        color = Colors()
         options = Options()
         while True:
+            id_exists = False
+            back_to_login = False
             print("Type 'quit' to any options to cancel.\n")
             username = input("Enter your full name: ")
             user_id = input("Enter your unique user_id (digits only): ")
@@ -40,7 +44,7 @@ def create_account(file_name):
                 return False
             
             if not user_id.strip().isdigit():
-                raise ValueError("Please provide the necessary inputs for user_id")
+                raise ValueError("Please provide the necessary inputs for the user_id")
             
 
             with open(file_name, "r", newline="") as file:
@@ -48,18 +52,31 @@ def create_account(file_name):
                 for line in reader:
                     if line["usernames"] == username:
                         if line["user_ids"] == user_id:
-                            print(f"User {username} with the id {user_id} already exists.")
+                            print(f"\nUser '{username}' with the id [{user_id}] already exists.")
                             confirm = input("Is this you? (yes/no): ")
+                            print(options.no)
                             if confirm in options.yes:
-                                print("Please return to log-in and enter your account")
-                                return False
+                                print("\nPlease return to log-in and enter your account")
+                                back_to_login = True
+                                break
                             elif confirm in options.no:
-                                print("The given id already exists. Please create a different user id!")
-                                continue
+                                print("\nThe given id already exists. Please create a different user id!")
+                                id_exists = True
+                                break
+                            else:
+                                raise ValueError("Please provide the necessary inputs for the user's options")
                     elif line["user_ids"] == user_id:
-                        print("The given id already exists. Please create a different user id!")
-                        continue
-            break
+                        print("\nThe given id already exists. Please create a different user id!")
+                        id_exists = True
+                        break
+
+            if id_exists:
+                continue
+            elif back_to_login:
+                return False
+            else:
+                break
+                
                     
         while True: 
             passcode = input("Enter your new password: ")
@@ -73,9 +90,11 @@ def create_account(file_name):
             
             try:
                 with open(file_name, "a", newline="") as file:
-                    writer = csv.DictWriter(file)
-                    writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcode":passcode})
-                return True
+                    fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
+                    writer = csv.DictWriter(file, fieldnames=fieldnames)
+                    writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})
+                print(f"Successfully created user {username}")
+                return False
             except IOError:
                 print("Something went wrong when adding user to the csv")
             except FileNotFoundError:
@@ -84,9 +103,27 @@ def create_account(file_name):
                 print("Unexpected Error:",e)          
                             
     except ValueError as e:
-        print("Error:",e)
+        print(f"\n{color.red}An Error Occured: {e}{color.reset}")
+    except Exception as e:
+        print(f"\n{color.red}An Unexpected Error Occured: {e}{color.reset}")
 
-def check_database_file_status():
+def check_database_content():
+    fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
+    number_of_columns = len(fieldnames)
+    file_name = "gab's_banking_system_users.csv"
+    with open(file_name,'r',newline="") as file:
+        reader = csv.DictReader(file)
+        if reader != fieldnames:
+            raise CsvError("Error in the fieldnames(header) data")
+        else:
+            for line in reader:
+                if len(line) != len(fieldnames):
+                    
+                    
+                
+    
+    
+def check_database_file():
     current_path = os.getcwd()
     file_name = "gab's_banking_system_users.csv"
     # print(current_path+"\\"+ file_name)
@@ -149,11 +186,12 @@ def main():
     
     try:
         color = Colors()
-        print(check_database_file_status())
+        print(check_database_file())
         # print(string)
         print("\n\n\nWelcome to Gab's Banking system!")
         while True:
-            check_database_file_status()
+            check_database_file()
+            check_database_content()
             print("\n\nEnter the following numbers to navigate:")
             print("1. Login to your account")
             print("2. Sign up to your account")
@@ -172,6 +210,9 @@ def main():
     except FileError as e:
         print("Error:", e)
         return
+    except CsvError as e:
+        print("Error:", e)
+        print("Please undo any changes to the banking system database file.")
     except Exception as e:
         print("Unexpected error:",e)
         
