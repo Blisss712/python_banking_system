@@ -1,3 +1,25 @@
+"""
+Checks the integrity and content of the user banking database CSV file.
+
+This function opens the 'gab's_banking_system_users.csv' file and performs
+two main checks:
+    1. It verifies that the CSV header (fieldnames) matches the expected
+        `['user_ids', 'usernames', 'user_balance', 'user_passcodes']`.
+    2. For each row in the CSV, it checks if the number of columns matches
+        the expected number and if the 'user_balance' field contains a
+        valid numeric value (either an integer or a float).
+
+
+If any of these checks fail, a `CsvError` is raised, indicating data corruption
+or an unexpected format within the CSV file. If all checks pass, the function
+completes silently.
+
+Raises:
+    CsvError: If the CSV header is incorrect, if a row has an invalid number
+                of data parameters, or if the 'user_balance' is not a valid
+                numeric format.
+"""
+
 import csv
 import os
 

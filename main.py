@@ -1,5 +1,4 @@
 import csv
-import os
 
 from Terminal_colors import Colors
 from is_float import is_float

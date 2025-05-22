@@ -2,16 +2,20 @@
 Used in handle_authentication.py 
 
 
+Arguments:
+    file_name (str): The name of the CSV file where user account
+                        information will be stored.
 
-returns -> a string variable 'user_id' or a false value (empty string)
+Returns:
+    False: Always returns `False` to signal the calling process to
+            initiate a login attempt.
 
 """
 
 import csv
 
-from Custom_Errors import CsvError
 from Terminal_colors import Colors
-from is_float import is_float
+
 
 def verify_user_account(file_name: str):
     color = Colors()
