@@ -18,6 +18,7 @@ from verify_user_account import verify_user_account
 def handle_authentication(user_option: str):
     color = Colors()
     RED, RESET = color.red, color.reset
+    
     directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
     full_file_path = os.path.join(directory, file_name)

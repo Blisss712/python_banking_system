@@ -78,7 +78,6 @@ def display_user_information(user_id):
         try:
             for row in reader:
                 if row["user_ids"] == user_id:
-                    full_name = row["usernames"]
                     print(f"\n{BLUE}Full name: {BBLUE}{UNDERLINE}{' '.join(word.capitalize() for word in row['usernames'].split())}{RESET}")
                     print(f"{BLUE}Id number: {BBLUE}{UNDERLINE}{user_id}{RESET}")
         except Exception as e:
