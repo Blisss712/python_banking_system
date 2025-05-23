@@ -26,8 +26,8 @@ from Terminal_colors import Colors
 from is_float import is_float
 
 
-# Always returning false allows forced log-in after the signing up process.
-def create_new_account(file_name: str) -> False:
+# from handle_authentication.py
+def create_new_account(file_path_name: str) -> False:  
     try:
 
         color = Colors()
@@ -54,7 +54,7 @@ def create_new_account(file_name: str) -> False:
                 raise ValueError("Please provide the necessary inputs for the user_id")
             
 
-            with open(file_name, "r", newline="") as file:
+            with open(file_path_name, "r", newline="") as file:
                 reader = csv.DictReader(file)
                 for line in reader:
                     if line["usernames"] == username:
@@ -95,7 +95,7 @@ def create_new_account(file_name: str) -> False:
                 continue
             
             try:
-                with open(file_name, "a", newline="") as file:
+                with open(file_path_name, "a", newline="") as file:
                     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})

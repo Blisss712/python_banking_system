@@ -1,4 +1,5 @@
 import csv
+import os
 
 from Terminal_colors import Colors
 from is_float import is_float
@@ -17,8 +18,12 @@ def display_balance(user_id):
     """
     color = Colors()
     BLUE, GREEN, UNDERLINE, RESET = color.blue, color.green, color.underline, color.reset
+    
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
-    with open(file_name, "r", newline="") as file:
+    full_file_path = os.path.join(directory, file_name)
+    
+    with open(full_file_path, "r", newline="") as file:
         reader = csv.DictReader(file)
         user_exists = False
         
@@ -62,8 +67,12 @@ def display_user_information(user_id):
     """
     color = Colors()
     BLUE, RESET, BBLUE, UNDERLINE = color.blue, color.reset, color.bblue, color.underline
+    
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
-    with open(file_name, "r", newline="") as file:
+    full_file_path = os.path.join(directory, file_name)
+
+    with open(full_file_path, "r", newline="") as file:
         reader = csv.DictReader(file)
         
         try:
@@ -89,10 +98,14 @@ def display_user_navigation(user_id):
     """
     color = Colors()
     RED, YELLOW, BLUE, RESET = color.red, color.yellow, color.blue, color.reset
+    
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
+    full_file_path = os.path.join(directory, file_name)
+    
     try:
         id_not_found = True
-        with open(file_name, "r", newline="") as file:
+        with open(full_file_path, "r", newline="") as file:
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:

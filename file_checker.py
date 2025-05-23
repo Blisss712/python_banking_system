@@ -29,8 +29,12 @@ def check_database_content():
     
     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
     number_of_columns = len(fieldnames)
+
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
-    with open(file_name,'r',newline="") as file:
+    full_file_path = os.path.join(directory, file_name)
+    
+    with open(full_file_path,'r',newline="") as file:
         reader = csv.DictReader(file)
 
         if reader.fieldnames != fieldnames:
@@ -50,15 +54,16 @@ def check_database_content():
 def check_database_file():
     color = Colors()
     GREEN, BOLD, RESET = color.green, color.bold, color.reset
-    current_path = os.getcwd()
+
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
-    # print(current_path+"\\"+ file_name)
+    full_file_path = os.path.join(directory, file_name)
     
-    if os.path.exists(current_path+"\\"+ file_name):
+    if os.path.exists(full_file_path):
         return(f"\n{GREEN}{BOLD}(existing user database data successfully retrieved){RESET}")
         
     else:
-        with open(file_name,"w",newline="") as file:
+        with open(full_file_path,"w",newline="") as file:
             fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
             writer = csv.DictWriter(file,fieldnames=fieldnames)
             writer.writeheader()

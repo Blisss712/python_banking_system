@@ -10,6 +10,7 @@ Raises:
 """
 
 import csv
+import os
 
 from Custom_Errors import CsvError
 from Terminal_colors import Colors
@@ -17,7 +18,9 @@ from is_float import is_float
 
 
 def withdraw(user_id):
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
+    full_file_path = os.path.join(directory, file_name)
     
     while True:
         color = Colors()
@@ -44,7 +47,7 @@ def withdraw(user_id):
             continue
 
 
-        with open(file_name, "r", newline="") as file:
+        with open(full_file_path, "r", newline="") as file:
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:
@@ -66,7 +69,7 @@ def withdraw(user_id):
 
 
         if complete_transaction:
-            with open(file_name, "r", newline="") as file:
+            with open(full_file_path, "r", newline="") as file:
                 reader = csv.DictReader(file)
                 fieldnames = reader.fieldnames
                 
@@ -75,7 +78,7 @@ def withdraw(user_id):
                         row["user_balance"] = user_balance_left
                     new_database_rows.append(row)
                     
-            with open(file_name, "w", newline="") as file:
+            with open(full_file_path, "w", newline="") as file:
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(new_database_rows)

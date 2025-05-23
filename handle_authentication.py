@@ -18,16 +18,17 @@ from verify_user_account import verify_user_account
 def handle_authentication(user_option: str):
     color = Colors()
     RED, RESET = color.red, color.reset
-    current_path = os.getcwd()
+    directory = os.path.dirname(os.path.abspath(__file__))
     file_name = "gab's_banking_system_users.csv"
+    full_file_path = os.path.join(directory, file_name)
     
-    if os.path.exists(current_path+"\\"+ file_name):
+    if os.path.exists(full_file_path):
         if user_option == 1:
-            authenticated_id = verify_user_account(file_name)
+            authenticated_id = verify_user_account(full_file_path)
             return authenticated_id
         
         elif user_option == 2:
-            forced_login = create_new_account(file_name) # always returns false 
+            forced_login = create_new_account(full_file_path) # always returns false 
             return forced_login
         
     else:

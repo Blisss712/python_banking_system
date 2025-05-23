@@ -2,7 +2,7 @@
 Used in handle_authentication.py 
 
 Arguments:
-    file_name (str): The name of the CSV file where user account
+    file_path_name (str): The name of the CSV file where user account
                         information will be stored.
 
 Returns:
@@ -15,13 +15,13 @@ import csv
 
 from Terminal_colors import Colors
 
-
-def verify_user_account(file_name: str):
+# from handle_authentication.py
+def verify_user_account(file_path_name: str):   
     color = Colors()
     RED, BOLD, GREEN, RESET = color.red, color.bold, color.green, color.reset 
     
     user_id = input("Enter your user id: ").strip()
-    with open(file_name, newline="") as file:
+    with open(file_path_name, newline="") as file:
         reader = csv.DictReader(file)
         
         for row in reader:
