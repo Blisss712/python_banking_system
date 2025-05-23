@@ -39,9 +39,12 @@ def create_new_account(file_path_name: str) -> False:
             print(f"\n{BLUE}Type '{RED}quit{RESET}{BLUE}' to any options to cancel.{RESET}")
             
             username = input("Enter your full name: ").strip()
+            
             if username == "quit":
                 return False
-            elif not username.isalpha():
+            
+            
+            elif not username.replace(" ","").isalpha():
                 print(f"{RED}Please do not include special characters in your name and try again.{RESET}")
                 continue
             
@@ -66,7 +69,7 @@ def create_new_account(file_path_name: str) -> False:
                                 back_to_login = True
                                 break
                             elif confirm in options.no:
-                                print("\n{RED}The given id already exists. Please create a different user id!{RESET}")
+                                print(f"\n{RED}The given id already exists. Please create a different user id!{RESET}")
                                 id_exists = True
                                 break
                             else:
