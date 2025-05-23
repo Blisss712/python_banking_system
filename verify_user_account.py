@@ -1,14 +1,13 @@
 """
 Used in handle_authentication.py 
 
-
 Arguments:
     file_name (str): The name of the CSV file where user account
                         information will be stored.
 
 Returns:
-    False: Always returns `False` to signal the calling process to
-            initiate a login attempt.
+    String (if the password is correct) -> a user_id which is regarded as true to pass through the login stage.
+    False -> when there are no password attempts left for the user
 
 """
 

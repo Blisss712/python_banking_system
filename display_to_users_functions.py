@@ -5,6 +5,16 @@ from is_float import is_float
 from Custom_Errors import CsvError
 
 def display_balance(user_id):
+    """
+    Displays:
+        - the balance of a specific user from the banking system's CSV file.
+
+    Raises:
+        CsvError:
+            - If the 'user_balance' in the CSV is not a valid float or integer,
+              or has an invalid format (e.g., too many decimal points).
+            - If the provided user_id is not found in the CSV file.
+    """
     color = Colors()
     BLUE, GREEN, UNDERLINE, RESET = color.blue, color.green, color.underline, color.reset
     file_name = "gab's_banking_system_users.csv"
@@ -42,8 +52,16 @@ def display_balance(user_id):
 
 
 def display_user_information(user_id):
+    """
+    Displays: 
+        - the full name of a specific user.
+        - ID number of a specific user.
+
+    Raises:
+        CsvError: If an unexpected error occurs during file processing.
+    """
     color = Colors()
-    BLUE, RESET, BOLD = color.blue, color.reset, color.bold
+    BLUE, RESET, BBLUE, UNDERLINE = color.blue, color.reset, color.bblue, color.underline
     file_name = "gab's_banking_system_users.csv"
     with open(file_name, "r", newline="") as file:
         reader = csv.DictReader(file)
@@ -52,13 +70,23 @@ def display_user_information(user_id):
             for row in reader:
                 if row["user_ids"] == user_id:
                     full_name = row["usernames"]
-                    print(f"\n{BLUE}Full name: {BOLD}{full_name.capitalize()}{RESET}")
-                    print(f"{BLUE}Id number: {BOLD}{user_id}{RESET}")
+                    print(f"\n{BLUE}Full name: {BBLUE}{UNDERLINE}{' '.join(word.capitalize() for word in row['usernames'].split())}{RESET}")
+                    print(f"{BLUE}Id number: {BBLUE}{UNDERLINE}{user_id}{RESET}")
         except Exception as e:
             raise CsvError(e)
         
         
 def display_user_navigation(user_id):
+    """
+    Displays: 
+        - A personalized welcome message  
+        - The menu of navigation options for a user.
+
+    Raises:
+        CsvError:
+            - If the provided user_id is not found in the CSV file.
+            - If a FileNotFoundError occurs when trying to open the CSV file.
+    """
     color = Colors()
     RED, YELLOW, BLUE, RESET = color.red, color.yellow, color.blue, color.reset
     file_name = "gab's_banking_system_users.csv"
@@ -68,7 +96,7 @@ def display_user_navigation(user_id):
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:
-                    print(f"\n{YELLOW}Hello {line['usernames'].capitalize()}!{RESET}")
+                    print(f"\n{YELLOW}Hello {' '.join(word.capitalize() for word in line['usernames'].split())}!{RESET}")
                     print(f"{BLUE}Enter any number to navigate for your account.{RESET}")
                     print("1. Withdraw")
                     print("2. Deposit")

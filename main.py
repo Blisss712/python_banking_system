@@ -1,5 +1,3 @@
-import csv
-
 from Terminal_colors import Colors
 from is_float import is_float
 from deposit_to_user_balance import deposit
@@ -13,15 +11,15 @@ from Custom_Errors import CsvError
 def main():
     try:
         color = Colors()
-        GREEN, RED, BOLD, RESET = color.green, color.red, color.bold, color.reset
+        GREEN, RED, BLUE, BOLD, RESET, FADED = color.green, color.red, color.blue, color.bold, color.reset, color.faded
         
-        print(check_database_file())
-        print(f"\n\n\n{GREEN}Welcome to Gab's Banking system!{RESET}")
+        print(f"{check_database_file()}")
         
         while True:
             check_database_file()
             check_database_content()
-            print(f"\n\nEnter the following numbers to navigate:")
+            print(f"\n\n\n{GREEN}Welcome to Gab's Banking system!{RESET}")
+            print(f"\n\n{BLUE}Enter the following numbers to navigate:{RESET}")
             print("1. Login to your account")
             print("2. Sign up to your account")
             print("3. Exit Program\n")
@@ -45,7 +43,7 @@ def main():
         print(f"{BOLD}{RED}\nError:{RESET}{RED} Please enter a valid input and try again\n {RESET}")
         
     except FileNotFoundError as e:
-        print("Error:", e)
+        print("File not found error:", e)
         return
     
     except CsvError as e:
@@ -55,6 +53,7 @@ def main():
     except Exception as e:
         print(f"{BOLD}{RED}Unexpected error: {RESET}{RED} {e} {RESET}")
         
+
 
 def handle_user_choice_prompt(user_id):
     color = Colors()
@@ -69,6 +68,7 @@ def handle_user_choice_prompt(user_id):
         elif user_choice == "3":
             display_balance(user_id)
         elif user_choice == "4":
+            print("true")
             display_user_information(user_id)
         elif user_choice == "5":
             return
@@ -76,38 +76,6 @@ def handle_user_choice_prompt(user_id):
             print(f"{RED}your input '{BOLD}{user_choice}{RESET}{RED}' is not in the navigation list, please enter a valid value{RESET}")
 
 
-# returns user_id or a false value
-def verify_user(file_name: str):
-    color = Colors()
-    RED, BOLD, GREEN, RESET = color.red, color.bold, color.green, color.reset 
-    
-    user_id = input("Enter your user id: ").strip()
-    with open(file_name, newline="") as file:
-        reader = csv.DictReader(file)
-        
-        for row in reader:
-            if row["user_ids"] == user_id:
-                passcode = input("Enter your password: ")
-                attempts = 3
-                
-                while True:
-                    if row["user_passcodes"] == passcode:
-                        print(f"\n{GREEN}You have successfully signed in to your account!{RESET}")
-                        return user_id
-                    elif attempts >= 1:
-                        print(f"{RED}{BOLD}Invalid password:{RESET}{RED}  you have {attempts} {'attempt' if attempts == 1 else 'attempts'} left.{RESET}")
-                        passcode = input("Enter your password: ")
-                        attempts -= 1
-                    else:
-                        print(f"\n{BOLD}{RED}Login Failed{RESET}")
-                        print(f"{RED}(Please enter the correct password.){RESET}")
-                        return False
-     
-        print(f"\n{RED}{BOLD}Cannot find the user with user_id: {user_id}{RESET}")
-        return False
-    
-
-    
         
 if __name__ == "__main__":
     main()

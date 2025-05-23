@@ -1,3 +1,13 @@
+"""
+Args:
+    It takes the prompted string user_authentication option in the main function
+
+Returns:
+    A string -> which is regarded as 'True' to proceed to log-in
+    False -> which can be regarded as empty string to deny log-in access
+    
+"""
+
 import os
 
 from Terminal_colors import Colors
@@ -21,4 +31,4 @@ def handle_authentication(user_option: str):
             return forced_login
         
     else:
-        raise FileNotFoundError(f"{RED}User database has been edited/deleted.{RESET}")
+        raise FileNotFoundError(f"{RED}User may have edited or deleted the database.{RESET}")

@@ -3,10 +3,6 @@
     forces a log-in attempt after the account creation process, ensuring the user
     can immediately access their newly created account.
 
-    Arguments:
-        file_name (str): The name of the CSV file where user account
-                         information will be stored.
-
     Returns:
         False: Always returns `False` to signal the calling process to
                initiate a login attempt.
@@ -36,16 +32,23 @@ def create_new_account(file_name: str) -> False:
 
         color = Colors()
         options = Options()
-        RED, BOLD, RESET = color.red, color.bold, color.reset
+        RED, GREEN, BLUE , BOLD, RESET = color.red, color.green, color.blue, color.bold, color.reset
         while True:
             id_exists = False
             back_to_login = False
-            print(f"Type '{BOLD}quit{RESET}' to any options to cancel.\n")
-            username = input("Enter your full name: ").strip()
-            user_id = input("Enter your unique user_id (digits only): ").strip()
+            print(f"\n{BLUE}Type '{RED}quit{RESET}{BLUE}' to any options to cancel.{RESET}")
             
-            if username == "quit" or user_id == "quit":
+            username = input("Enter your full name: ").strip()
+            if username == "quit":
                 return False
+            elif not username.isalpha():
+                print(f"{RED}Please do not include special characters in your name and try again.{RESET}")
+                continue
+            
+            user_id = input("Enter your unique user_id (digits only): ").strip()
+            if user_id == "quit":
+                return False
+            
             
             if not user_id.isdigit():
                 raise ValueError("Please provide the necessary inputs for the user_id")
@@ -56,20 +59,20 @@ def create_new_account(file_name: str) -> False:
                 for line in reader:
                     if line["usernames"] == username:
                         if line["user_ids"] == user_id:
-                            print(f"\nUser '{username}' with the id [{user_id}] already exists.")
-                            confirm = input("Is this you? (yes/no): ")
+                            print(f"\n{RED}User '{username}' with the id [{user_id}] already exists.{RESET}")
+                            confirm = input(f"{BLUE}Is this you? (yes/no): {RESET}")
                             if confirm in options.yes:
-                                print("\nPlease return to log-in and enter your account")
+                                print(f"\n{BLUE}Please return to log-in and enter your account{RESET}")
                                 back_to_login = True
                                 break
                             elif confirm in options.no:
-                                print("\nThe given id already exists. Please create a different user id!")
+                                print("\n{RED}The given id already exists. Please create a different user id!{RESET}")
                                 id_exists = True
                                 break
                             else:
                                 raise ValueError("Please provide the necessary inputs for the user's options")
                     elif line["user_ids"] == user_id:
-                        print("\nThe given id already exists. Please create a different user id!")
+                        print(f"\n{RED}The given id already exists. Please create a different user id!{RESET}")
                         id_exists = True
                         break
 
@@ -88,7 +91,7 @@ def create_new_account(file_name: str) -> False:
             if passcode =="quit" or confirm_passcode == "quit":
                 return False
             elif passcode != confirm_passcode:
-                print("Passwords do not match, please re-enter your password.")
+                print(f"{RED}Passwords do not match, please re-enter your password.{RESET}")
                 continue
             
             try:
@@ -96,7 +99,8 @@ def create_new_account(file_name: str) -> False:
                     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})
-                print(f"Successfully created user {username}")
+                print(f"\n{GREEN}Successfully created user {username}.{RESET}")
+                print(f"{BLUE}Please proceed to log-in.{RESET}")
                 return False
             except IOError as e:
                 print("Something went wrong when adding user to the csv")
@@ -108,9 +112,9 @@ def create_new_account(file_name: str) -> False:
                 print("Unexpected Error:",e)          
                             
     except ValueError as e:
-        print(f"\n{RED}An Error Occured: {e}{RESET}")
+        print(f"\n{RED}{BOLD}An Error Occured: {RESET}{RED}{e}{RESET}")
     except Exception as e:
-        print(f"\n{RED}An Unexpected Error Occured: {e}{RESET}")
+        print(f"\n{RED}{BOLD}An Unexpected Error Occured: {RESET}{RED}{e}{RESET}")
 
 
 class Options:  # Handles input cases

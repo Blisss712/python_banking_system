@@ -1,3 +1,14 @@
+"""
+Includes the process of writting the csv file if transaction is successful
+
+Args:
+    user_id (str): The ID of the user performing the withdrawal.
+
+Raises:
+    CsvError: If an unexpected error occurs while trying to find the user
+    
+"""
+
 import csv
 
 from Custom_Errors import CsvError
