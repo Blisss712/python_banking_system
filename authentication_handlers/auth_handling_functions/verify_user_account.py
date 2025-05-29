@@ -31,7 +31,7 @@ def verify_user_account(full_file_path: str) -> str:
                 
                 while True:
                     if row["user_passcodes"] == passcode:
-                        print(f"\n{GREEN}You have successfully signed in to your account!{RESET}")
+                        print(f"\n{GREEN}You have successfully signed in to your account!\n{RESET}")
                         return user_id
                     elif attempts >= 1:
                         print(f"{RED}{BOLD}Invalid password:{RESET}{RED}  you have {attempts} {'attempt' if attempts == 1 else 'attempts'} left.{RESET}")

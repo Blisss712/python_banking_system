@@ -36,7 +36,7 @@ def deposit(user_id, full_file_path):
             deposit_peso, deposit_cent = deposit_amount.split(".")
             
             if int(deposit_peso) == 0 or int(deposit_cent) == 0:
-                print(f"{RED}Please withdraw a valid amount. with valid centavo values.{RESET}")
+                print(f"{RED}Please deposit a valid amount with valid centavo values.{RESET}")
                 continue
                 
             elif len(deposit_cent) > 2:
@@ -45,11 +45,11 @@ def deposit(user_id, full_file_path):
         
         # checks amount with whole numbers
         elif not deposit_amount.isdigit():  
-            print(f"{RED}Invalid amount: Please return a valid digit/value{RESET}")
+            print(f"{RED}Invalid amount: Please enter a valid {BOLD}digit/value{RESET}")
             continue
 
         elif int(deposit_amount) == 0:
-            print(f"{RED}Please withdraw a valid amount. with valid centavo values.{RESET}")
+            print(f"{RED}Please deposit a valid amount with valid centavo values.{RESET}")
             continue
         
 

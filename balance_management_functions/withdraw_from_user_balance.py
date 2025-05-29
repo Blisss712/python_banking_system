@@ -38,7 +38,7 @@ def withdraw(user_id, full_file_path):
             withdrawed_peso, withdrawed_cent = withdrawed_amount.split(".")
             
             if int(withdrawed_peso) == 0 or int(withdrawed_cent) == 0:
-                print(f"{RED}Please withdraw a valid amount. with valid centavo values.{RESET}")
+                print(f"{RED}Please withdraw a valid amount with valid centavo values.{RESET}")
                 continue
                 
             elif len(withdrawed_cent) > 2:
@@ -47,11 +47,11 @@ def withdraw(user_id, full_file_path):
         
         # checks amount with whole numbers
         elif not withdrawed_amount.isdigit():
-            print(f"{RED}Invalid amount: Please return a valid digit{RESET}")
+            print(f"{RED}Invalid amount: Please enter a valid {BOLD}digit/value{RESET}")
             continue
 
         elif int(withdrawed_amount) == 0:
-            print(f"{RED}Please withdraw a valid amount. with valid centavo values.{RESET}")
+            print(f"{RED}Please withdraw a valid amount with valid centavo values.{RESET}")
             continue
 
 

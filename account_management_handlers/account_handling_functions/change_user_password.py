@@ -11,6 +11,38 @@ def change_user_password(user_id, full_file_path):
 
     while True:
         print(f"{BLUE}\nNote: Enter '{RED}{BOLD}0{RESET}{BLUE}' to cancel{RESET}")
+        
+        try:
+            with open(full_file_path, "r", newline="") as file:
+                reader = csv.DictReader(file)
+                                
+                for line in reader:
+                    if line["user_ids"] == user_id:
+                        current_password = input("Enter your current password: ")
+                        attempts = 3
+                        
+                        while True:
+                            if current_password == "0":
+                                return False
+                            
+                            elif line["user_passcodes"] == current_password:
+                                break
+                                
+                            elif attempts >= 1:
+                                print(f"{RED}{BOLD}Invalid password:{RESET}{RED}  you have {attempts} {'attempt' if attempts == 1 else 'attempts'} left.{RESET}")
+                                current_password = input("Enter your current password: ")
+                                attempts -= 1
+                                
+                            else:
+                                print(f"\n{BOLD}{RED}Login Failed{RESET}")
+                                print(f"{RED}(Please enter the correct password.){RESET}")
+                                return False
+                            
+        except FileNotFoundError as e:
+            raise FileNotFoundError(e)
+        except Exception as e:
+            raise Exception(e)
+        
         new_passcode = input("Enter your new password: ")
         confirm_new_passcode = input("Confirm your password: ")
         
@@ -24,6 +56,7 @@ def change_user_password(user_id, full_file_path):
             with open(full_file_path, "r", newline="") as file:
                 reader = csv.DictReader(file)
                 fieldnames = reader.fieldnames
+                            
                 for line in reader:
                     if line["user_ids"] == user_id:
                         line["user_passcodes"] = new_passcode

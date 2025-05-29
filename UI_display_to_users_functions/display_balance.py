@@ -33,8 +33,8 @@ def display_balance(user_id, full_file_path):
                         peso, centavo = balance_list
 
                         if peso.isdigit() and centavo.isdigit():
-                            print(f"\n{BLUE}{row["usernames"]}'s balance: {RESET}")
-                            print(f"{GREEN}{UNDERLINE}P{float(current_balance):,.2f}{RESET}")
+                            print(f"\n\n{BLUE}{row["usernames"]}'s balance: {RESET}")
+                            print(f"{GREEN}{UNDERLINE}P{float(current_balance):,.2f}{RESET}\n")
                             user_exists = True
                             break
                         elif len(balance_list) > 3:

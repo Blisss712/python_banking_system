@@ -121,7 +121,7 @@ def create_new_account(full_file_path: str) -> False:
                     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})
-                print(f"\n{GREEN}Successfully created user {BOLD}{username}{RESET}{GREEN}.{RESET}")
+                print(f"\n{GREEN}Successfully created user: {BOLD}{username}{RESET}{GREEN}.{RESET}")
                 print(f"{BLUE}Please proceed to log-in.{RESET}")
                 return False
             except IOError as e:

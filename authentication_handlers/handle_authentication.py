@@ -17,7 +17,7 @@ from authentication_handlers.auth_handling_functions.verify_user_account import 
 # returns user_id or a false value
 def handle_authentication(user_option: str, full_file_path: object) -> str:
     color = Colors()
-    RED, RESET = color.red, color.reset
+    RED, BOLD, RESET = color.red, color.bold, color.reset
     
     if os.path.exists(full_file_path):
         if user_option == 1:
@@ -27,6 +27,8 @@ def handle_authentication(user_option: str, full_file_path: object) -> str:
         elif user_option == 2:
             forced_login = create_new_account(full_file_path) # always returns false 
             return forced_login
-        
+        else:
+            print(f"\n{RED}your input '{BOLD}{user_option}{RESET}{RED}' is not in the navigation list, please enter a valid value{RESET}")    
+                
     else:
         raise FileNotFoundError(f"{RED}User may have edited or deleted the database.{RESET}")

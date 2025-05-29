@@ -25,7 +25,7 @@ def display_user_navigation(user_id, full_file_path):
             reader = csv.DictReader(file)
             for line in reader:
                 if line["user_ids"] == user_id:
-                    print(f"\n{YELLOW}Hello {' '.join(word.capitalize() for word in line['usernames'].split())}!{RESET}")
+                    print(f"\n\n{YELLOW}Hello {' '.join(word.capitalize() for word in line['usernames'].split())}!{RESET}")
                     print(f"{BLUE}Enter any number to navigate for your account.{RESET}")
                     print("1. Withdraw")
                     print("2. Deposit")

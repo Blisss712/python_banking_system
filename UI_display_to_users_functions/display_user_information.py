@@ -22,8 +22,8 @@ def display_user_information(user_id, full_file_path):
             
             for row in reader:
                 if row["user_ids"] == user_id:
-                    print(f"\n{BLUE}Full name: {YELLOW}{UNDERLINE}{row['usernames']}{RESET}")
-                    print(f"{BLUE}Id number: {YELLOW}{UNDERLINE}{user_id}{RESET}")
+                    print(f"\n\n{BLUE}Full name: {YELLOW}{UNDERLINE}{row['usernames']}{RESET}")
+                    print(f"{BLUE}Id number: {YELLOW}{UNDERLINE}{user_id}{RESET}\n")
 
     except FileNotFoundError as e:
         raise FileNotFoundError(e)
