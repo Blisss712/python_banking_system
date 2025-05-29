@@ -29,19 +29,32 @@ def check_database_content(full_file_path):
     
     fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
     number_of_columns = len(fieldnames)
-    
-    with open(full_file_path,'r',newline="") as file:
-        reader = csv.DictReader(file)
+    try:
+        with open(full_file_path,'r',newline="") as file:
+            reader = csv.DictReader(file)
 
-        if reader.fieldnames != fieldnames:
-            raise CsvError("Error in the fieldnames(header) data")
-        
-        else:
-            for line in reader:
-                balance = line["user_balance"]
-                if len(line) != number_of_columns:
-                    raise CsvError("Error in the user dataset, invalid number of user data parameters.")
-                elif is_float(balance) and '.' in balance:
-                    return
-                elif not balance.isdigit():
-                    raise CsvError(f"Error in the user dataset, invalid {UNDERLINE}{BOLD}balance{RESET}{RED} value.")
+            if reader.fieldnames != fieldnames:
+                raise CsvError("Error in the fieldnames(header) data")
+            
+            else:
+                for line in reader:
+                    balance = line["user_balance"]
+                    if len(line) != number_of_columns:
+                        raise CsvError("Error in the user dataset, invalid number of user data parameters.")
+                    elif is_float(balance) and '.' in balance:
+                        return
+                    elif not balance.isdigit():
+                        raise CsvError(f"Error in the user dataset, invalid {UNDERLINE}{BOLD}balance{RESET}{RED} value.")
+
+
+    except ValueError as e:
+        raise ValueError(e)       
+     
+    except FileNotFoundError as e:
+        raise FileNotFoundError(e)
+    
+    except IOError as e:
+        raise IOError(e)   
+    
+    except Exception as e:
+        raise Exception(e)

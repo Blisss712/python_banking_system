@@ -2,8 +2,11 @@ from UI_display_to_users_functions.display_account_management_options import dis
 from account_management_handlers.account_handling_functions.change_username import change_username
 from account_management_handlers.account_handling_functions.change_user_password import change_user_password
 from account_management_handlers.account_handling_functions.delete_user_account import delete_user_account
+from Essentials.Terminal_colors import Colors
 
 def handle_account_management(user_id, full_file_path):
+    color = Colors()
+    RED, BOLD, RESET = color.red, color.bold, color.reset
     try:
         while True:
             display_account_management_options()
@@ -19,7 +22,7 @@ def handle_account_management(user_id, full_file_path):
             elif user_option == "4":
                 break
             else:
-                print("Invalid option, please try again.")
+                print(f"\n{RED}your input '{BOLD}{user_option}{RESET}{RED}' is not in the navigation list, please enter a valid value{RESET}")
                 
     except FileNotFoundError as e:
         raise FileNotFoundError(e)

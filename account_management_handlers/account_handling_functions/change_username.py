@@ -56,8 +56,13 @@ def change_username(user_id, full_file_path):
                 writer.writerows(new_database_rows)
                 return 
             
+            
+            
+        except ValueError as e:
+            raise ValueError(e)       
         except FileNotFoundError as e:
             raise FileNotFoundError(e)
-        
+        except IOError as e:
+            raise IOError(e)   
         except Exception as e:
             raise Exception(e)

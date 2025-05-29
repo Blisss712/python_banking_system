@@ -21,8 +21,21 @@ def check_database_file(full_file_path):
     return f"\n{GREEN}{BOLD}(existing user database data successfully retrieved){RESET}"
 
   else:
-    with open(full_file_path, "w", newline="") as file:
-      fieldnames = ['user_ids', 'usernames', 'user_balance', 'user_passcodes']
-      writer = csv.DictWriter(file, fieldnames=fieldnames)
-      writer.writeheader()
+    
+    try:
+      with open(full_file_path, "w", newline="") as file:
+        fieldnames = ['user_ids', 'usernames', 'user_balance', 'user_passcodes']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        
+        
+    except ValueError as e:
+        raise ValueError(e)       
+    except FileNotFoundError as e:
+        raise FileNotFoundError(e)
+    except IOError as e:
+        raise IOError(e)   
+    except Exception as e:
+        raise Exception(e)
+      
     return f"\n{GREEN}{BOLD}NOTICE: new user banking database has been initialized{RESET}"

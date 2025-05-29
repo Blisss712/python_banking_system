@@ -38,10 +38,16 @@ def change_user_password(user_id, full_file_path):
                                 print(f"{RED}(Please enter the correct password.){RESET}")
                                 return False
                             
+                            
+        except ValueError as e:
+            raise ValueError(e)       
         except FileNotFoundError as e:
             raise FileNotFoundError(e)
+        except IOError as e:
+            raise IOError(e)   
         except Exception as e:
             raise Exception(e)
+        
         
         new_passcode = input("Enter your new password: ")
         confirm_new_passcode = input("Confirm your password: ")
@@ -69,7 +75,16 @@ def change_user_password(user_id, full_file_path):
                 writer.writerows(new_database_rows)
                 return 
             
+            
+            
+        except ValueError as e:
+            raise ValueError(e)       
+        
         except FileNotFoundError as e:
             raise FileNotFoundError(e)
+        
+        except IOError as e:
+            raise IOError(e)   
+        
         except Exception as e:
             raise Exception(e)

@@ -18,7 +18,6 @@
 
 
 import csv
-import os
 
 
 from Essentials.Custom_Errors import CsvError
@@ -28,54 +27,53 @@ from Essentials.User_options import Options
 
 # from handle_authentication.py
 def create_new_account(full_file_path: str) -> False:  
-    try:
 
-        color = Colors()
-        options = Options()
-        RED, GREEN, BLUE , BOLD, RESET = color.red, color.green, color.blue, color.bold, color.reset
-        while True:
-            id_exists = False
-            back_to_login = False
-            print(f"\n{BLUE}Type and enter '{RED}0{RESET}{BLUE}' to any options to cancel.{RESET}")
+    color = Colors()
+    options = Options()
+    RED, GREEN, BLUE , BOLD, RESET = color.red, color.green, color.blue, color.bold, color.reset
+    while True:
+        id_exists = False
+        back_to_login = False
+        print(f"\n{BLUE}Type and enter '{RED}0{RESET}{BLUE}' to any options to cancel.{RESET}")
 
-                
-            first_name = input(f"Enter your {BOLD}first{RESET} name: ").strip()
-            if first_name == "0":
-                return False
-            middle_name = input(f"\nEnter your {BOLD}middle{RESET} name: ").strip()
-            if middle_name == "0":
-                return False
-            last_name = input(f"\nEnter your {BOLD}last{RESET} name: ").strip()
-            if last_name == "0":
-                return False
             
-            
-            if not first_name.replace(" ","").isalpha():
-                print(f"{RED}\nThere was a problem with the first name you entered.{RESET}")
-                print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
-                continue
-            elif not middle_name.replace(" ", "").isalpha():
-                print(f"{RED}\nThere was a problem with the middle name you entered.{RESET}")
-                print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
-                continue
-            elif not last_name.replace(" ", "").isalpha():
-                print(f"{RED}\nThere was a problem with the last name you entered.{RESET}")
-                print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
-                continue
-            
+        first_name = input(f"Enter your {BOLD}first{RESET} name: ").strip()
+        if first_name == "0":
+            return False
+        middle_name = input(f"\nEnter your {BOLD}middle{RESET} name: ").strip()
+        if middle_name == "0":
+            return False
+        last_name = input(f"\nEnter your {BOLD}last{RESET} name: ").strip()
+        if last_name == "0":
+            return False
+        
+        
+        if not first_name.replace(" ","").isalpha():
+            print(f"{RED}\nThere was a problem with the first name you entered.{RESET}")
+            print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
+            continue
+        elif not middle_name.replace(" ", "").isalpha():
+            print(f"{RED}\nThere was a problem with the middle name you entered.{RESET}")
+            print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
+            continue
+        elif not last_name.replace(" ", "").isalpha():
+            print(f"{RED}\nThere was a problem with the last name you entered.{RESET}")
+            print(f"{RED}Please do not include {BOLD}special characters or digits{RESET}{RED} to your name and try again.{RESET}")
+            continue
+        
 
-            middle_initial = middle_name[0] + "."
-            username = first_name.capitalize() + " " + middle_initial.capitalize() + " " + last_name.capitalize()
-            
-            user_id = input("\nEnter your unique user_id (digits only): ").strip()
-            if user_id == "0":
-                return False
-            
-            
-            if not user_id.isdigit():
-                raise ValueError("Please provide the necessary inputs for the user_id")
-            
-
+        middle_initial = middle_name[0] + "."
+        username = first_name.capitalize() + " " + middle_initial.capitalize() + " " + last_name.capitalize()
+        
+        user_id = input("\nEnter your unique user_id (digits only): ").strip()
+        if user_id == "0":
+            return False
+        
+        
+        if not user_id.isdigit():
+            raise ValueError("Please provide the necessary inputs for the user_id")
+        
+        try:
             with open(full_file_path, "r", newline="") as file:
                 reader = csv.DictReader(file)
                 for line in reader:
@@ -97,44 +95,57 @@ def create_new_account(full_file_path: str) -> False:
                         print(f"\n{RED}The given id already exists. Please create a different user id!{RESET}")
                         id_exists = True
                         break
-
-            if id_exists:
-                continue
-            elif back_to_login:
-                return False
-            else:
-                break
-                
                     
-        while True: 
-            passcode = input("\nEnter your new password: ")
-            confirm_passcode = input("Confirm your password: ")
+                    
+        except ValueError as e:
+            raise ValueError(e)      
+        except FileNotFoundError as e:
+            raise FileNotFoundError(e)
+        except IOError as e:
+            raise IOError(e)   
+        except Exception as e:
+            raise Exception(e)
+
+
+        if id_exists:
+            continue
+        elif back_to_login:
+            return False
+        else:
+            break
             
-            if passcode =="0" or confirm_passcode == "0":
-                return False
-            elif passcode != confirm_passcode:
-                print(f"{RED}Passwords do not match, please re-enter your password.{RESET}")
-                continue
-            
-            try:
-                with open(full_file_path, "a", newline="") as file:
-                    fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
-                    writer = csv.DictWriter(file, fieldnames=fieldnames)
-                    writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})
-                print(f"\n{GREEN}Successfully created user: {BOLD}{username}{RESET}{GREEN}.{RESET}")
-                print(f"{BLUE}Please proceed to log-in.{RESET}")
-                return False
-            except IOError as e:
-                print("Something went wrong when adding user to the csv")
-                raise CsvError(e)
-            except FileNotFoundError as e:
-                print("Something went wrong when adding user to the csv") 
-                raise FileNotFoundError(e)   
-            except Exception as e:
-                print("Unexpected Error:",e)          
-                            
-    except ValueError as e:
-        print(f"\n{RED}{BOLD}An Error Occured: {RESET}{RED}{e}{RESET}")
-    except Exception as e:
-        print(f"\n{RED}{BOLD}An Unexpected Error Occured: {RESET}{RED}{e}{RESET}")
+                
+    while True: 
+        passcode = input("\nEnter your new password: ")
+        confirm_passcode = input("Confirm your password: ")
         
+        if passcode =="0" or confirm_passcode == "0":
+            return False
+        elif passcode != confirm_passcode:
+            print(f"{RED}Passwords do not match, please re-enter your password.{RESET}")
+            continue
+        
+        try:
+            with open(full_file_path, "a", newline="") as file:
+                fieldnames = ['user_ids','usernames','user_balance','user_passcodes']
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writerow({"user_ids":user_id, "usernames": username, "user_balance":0, "user_passcodes":passcode})
+            print(f"\n{GREEN}Successfully created user: {BOLD}{username}{RESET}{GREEN}.{RESET}")
+            print(f"{BLUE}Please proceed to log-in.{RESET}")
+            return False
+        
+        
+        
+        except ValueError as e:
+            raise ValueError(e)
+        except IOError as e:
+            print("Something went wrong when adding user to the csv")
+            raise IOError(e)
+        except FileNotFoundError as e:
+            print("Something went wrong when adding user to the csv") 
+            raise FileNotFoundError(e)   
+        except Exception as e:
+            print("Unexpected Error:",e)          
+                        
+
+    

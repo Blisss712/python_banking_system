@@ -1,4 +1,8 @@
-# from account_management_handlers.handle_account_functions.Terminal_colors import Colors
+"""
+    Displays:
+        - The user navigation in the account management section.
+        
+"""
 from Essentials.Terminal_colors import Colors
     
 def display_account_management_options():

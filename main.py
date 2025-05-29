@@ -11,12 +11,11 @@ from handle_user_choice_prompt import handle_user_choice_prompt
 
 
 def main():
-# try:
     color = Colors()
     GREEN, RED, BLUE, BOLD, RESET = color.green, color.red, color.blue, color.bold, color.reset
     
     main_directory = os.path.dirname(os.path.abspath(__file__))
-    file_name = "gab's_banking_system_users.csv"
+    file_name = "gabs_banking_system_users.csv"
     full_file_path = os.path.join(main_directory, file_name)
 
     print(f"{check_database_file(full_file_path)}")
@@ -46,13 +45,18 @@ def main():
             else:
                 continue
 
+
         except ValueError as e:
-            print(f"{BOLD}{RED}\nError:{RESET}{RED} Please enter a valid input and try again\n {RESET}")
+            print(f"{BOLD}{RED}\nError:{RESET}{RED}{e}{RESET}")
+            print(f"{RED}Please enter a valid input and try again\n{RESET}")
             
         except FileNotFoundError as e:
-            print("File not found error:", e)
+            print(f"{BOLD}{RED}File not found error:{RESET} {RED}{e}{RESET}")
             return
-
+        
+        except IOError as e:
+            print(f"{BOLD}{RED}Error in Input/Output:{RESET} {RED}{e}{RESET}")
+            
         except CsvError as e:
             print(f"{BOLD}{RED}Error in the csv file: {RESET}{RED} {e} {RESET}")
             print(f"{RED}Please undo any changes to the banking system database file.\n{RESET}")

@@ -45,8 +45,17 @@ def delete_user_account(user_id, full_file_path):
                 account_deleted = True
                 return account_deleted
             
+            
+            
+        except ValueError as e:
+            raise ValueError(e)         
+        
         except FileNotFoundError as e:
             raise FileNotFoundError(e)
+        
+        except IOError as e:
+            raise IOError(e)   
+        
         except Exception as e:
             raise Exception(e)
 

@@ -39,8 +39,16 @@ def display_user_navigation(user_id, full_file_path):
             if id_not_found:
                 raise CsvError(f"{RED}Something went wrong the to user id.{RESET}")     
             
+            
+    except ValueError as e:
+        raise ValueError(e)       
+     
     except FileNotFoundError as e:
         raise FileNotFoundError(e)
+    
+    except IOError as e:
+        raise IOError(e)   
+    
     except Exception as e:
         raise Exception(e)
         
