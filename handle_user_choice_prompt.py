@@ -34,15 +34,6 @@ def handle_user_choice_prompt(user_id: str, full_file_path: str) -> None:
                 else:
                     print(f"{RED}your input '{BOLD}{user_choice}{RESET}{RED}' is not in the navigation list, please enter a valid value{RESET}")
    
-<<<<<<< HEAD
-    except ValueError as e:
-        raise ValueError(e)        
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
-    
-    except CsvError as e:
-        raise CsvError(e)        
-=======
    
     except ValueError as e:
         raise ValueError(e)       
@@ -56,6 +47,5 @@ def handle_user_choice_prompt(user_id: str, full_file_path: str) -> None:
     except CsvError as e:
         raise CsvError(e)        
     
->>>>>>> origin/master
     except Exception as e:
         raise Exception(e)
